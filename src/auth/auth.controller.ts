@@ -4,7 +4,8 @@ import { CreateUserDTO } from '../user/dtos/CreateUserDTO';
 import { LoginUserDTO } from '../user/dtos/LoginUserDTO';
 import { UserService } from 'src/user/user.service';
 import { AuthGuard } from './auth.guard';
-import { User } from 'src/decorators/users.decorator';
+import { AuthUser } from 'src/decorators/users.decorator';
+import { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -16,8 +17,7 @@ export class AuthController {
   @Post('sign-up')
   async postUser(@Body() body: CreateUserDTO) {
     try {
-      const newUser = await this.userService.createUser(body);
-      console.log(newUser);
+      await this.userService.createUser(body);
     } catch (err) {
       console.log(err);
     }
@@ -31,7 +31,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('me')
-  async me(@User() user) {
+  async me(@AuthUser() user: User) {
     return {
       me: user,
     };

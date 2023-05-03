@@ -1,10 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  HttpException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 
@@ -23,7 +17,6 @@ export class AuthGuard implements CanActivate {
       const data = this.authService.checkToken(
         (authorization ?? '').split(' ')[1],
       );
-      console.log(data);
       const user = await this.userService.getUserById(parseInt(data.sub));
       request.user = user;
     } catch (err) {
